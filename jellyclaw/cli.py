@@ -274,6 +274,38 @@ def dashboard(
         typer.echo("\nShutting down.")
 
 
+@app.command()
+def learn(
+    name: str = typer.Argument(..., help="HeepX capability repository, e.g. warrant or reasoning"),
+    ref: str = typer.Option(None, "--ref", help="Pin an exact tag or commit (default: newest release tag)"),
+    minimal: bool = typer.Option(False, "--minimal", help="Load only the smallest sufficient file"),
+    show: bool = typer.Option(False, "--show", help="Print the assembled context instead of a summary"),
+):
+    """Fetch a HeepX capability into the local cache and report what was loaded.
+
+    Capabilities are text that makes a model better at one thing:
+    warrant (justify a claim before asserting it), reasoning (structure work
+    as a commitment graph). See https://github.com/HeepX/standard
+    """
+    from jellyclaw.capabilities import CapabilityError, learn as learn_capability
+
+    try:
+        cap = learn_capability(name, ref=ref, minimal=minimal)
+    except CapabilityError as exc:
+        typer.secho(str(exc), fg="red", err=True)
+        raise typer.Exit(1)
+
+    if show:
+        typer.echo(cap.context())
+        return
+
+    typer.secho(f"Learned {cap.audit()}", fg="green")
+    for item in cap.improves:
+        typer.echo(f"  + {item}")
+    for item in cap.does_not_improve:
+        typer.echo(f"  - does not improve: {item}")
+
+
 def main() -> None:
     app()
 
