@@ -137,3 +137,29 @@ def test_teach_with_no_capabilities_is_a_no_op(repo):
     agent = Agent("CEO", "llama3", None, "You are the CEO.")
     teach(agent)
     assert agent.system_prompt == "You are the CEO."
+
+
+def test_loader_constants_match_the_published_standard():
+    """The loader must follow standard's schema, not its own copy of it.
+
+    REQUIRED_KEYS and SUPPORTED_SCHEMA are a hand-copied subset of
+    HeepX/standard's capability schema. They are correct today; nothing else
+    in this repository would notice if the standard moved and they did not.
+    Skips when offline so the rest of the suite stays network-free.
+    """
+    import json
+    import urllib.error
+    import urllib.request
+
+    from jellyclaw.capabilities import REQUIRED_KEYS, SUPPORTED_SCHEMA
+
+    url = ("https://raw.githubusercontent.com/HeepX/standard/v1.0.1"
+           "/schema/capability.schema.json")
+    try:
+        with urllib.request.urlopen(url, timeout=10) as fh:
+            schema = json.load(fh)
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        pytest.skip(f"standard schema unreachable: {exc}")
+
+    assert set(REQUIRED_KEYS) == set(schema["required"])
+    assert SUPPORTED_SCHEMA == schema["properties"]["schema"]["const"]

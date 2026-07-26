@@ -41,7 +41,9 @@ log = logging.getLogger(__name__)
 CAPABILITY_ORG = "HeepX"
 
 # HXS-META: keys a conforming CAPABILITY.yaml must carry. Mirrors the
-# `required` list in standard/schema/capability.schema.json.
+# `required` list in standard/schema/capability.schema.json. This is a copy,
+# so tests/test_capabilities.py checks it against the published schema --
+# the loader is meant to follow the standard, not its own guess at it.
 REQUIRED_KEYS = (
     "schema", "id", "version", "capability", "improves",
     "does_not_improve", "evaluation", "load_order", "license",
