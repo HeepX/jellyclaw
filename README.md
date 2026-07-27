@@ -1,6 +1,9 @@
 # jellyclaw
 
 The runtime HeepX capability repositories run on.
+New to the organization? Start at
+[`HeepX/workspace`](https://github.com/HeepX/workspace) — what HeepX is, why it
+is shaped this way, and what needs doing.
 
 ---
 
@@ -23,7 +26,7 @@ Any OS. Any AI. One runtime.
 - Not an agent framework you build a startup on.
 - Not a prompt library.
 
-It is the thing that makes `agent.learn("warrant")` an actual command
+It is the thing that makes `jellyclaw.learn("warrant")` an actual command
 instead of a slogan in a README.
 
 ---
@@ -44,9 +47,16 @@ the capability was loaded correctly and the result is verifiable.
 
 ## Usage
 
-Load a capability. This clones the real repository, pins its newest release
-tag, parses `CAPABILITY.yaml` against the `standard` schema, and reads the
+Load a capability. This clones the real repository, pins its **newest git
+tag**, parses `CAPABILITY.yaml` against the `standard` schema, and reads the
 files its `load_order` names:
+
+> The newest tag is not always the newest GitHub *release* — a documentation
+> patch gets a tag and no release. Loading `warrant` today gives you v1.2.1
+> while its latest release is v1.2.0. Which of the two a runtime should follow
+> is genuinely undecided in the ecosystem, not an oversight here; see
+> [`workspace/BACKLOG.md`](https://github.com/HeepX/workspace/blob/main/BACKLOG.md)
+> W-6. Pass `--ref` to pin something exact and take the question out of play.
 
 ```bash
 jellyclaw learn warrant
@@ -77,7 +87,7 @@ Options:
 
 ```bash
 jellyclaw learn reasoning --minimal      # only the sufficient_alone file
-jellyclaw learn warrant --ref v1.2.0     # pin an exact release
+jellyclaw learn warrant --ref v1.2.0     # pin an exact tag
 jellyclaw learn warrant --show           # print the assembled context
 ```
 

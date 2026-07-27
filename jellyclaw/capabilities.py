@@ -151,7 +151,12 @@ def _fetch(name: str, ref: str | None) -> tuple[Path, str, str, str]:
 
 
 def _latest_tag(repo: Path) -> str:
-    """Newest release tag, or the default branch when a repository has none.
+    """Newest git tag, or the default branch when a repository has none.
+
+    Newest *tag*, not newest GitHub release: a documentation patch gets a tag
+    and no release, so these diverge. Which one a runtime should follow is an
+    open question in the ecosystem (workspace BACKLOG.md W-6), and this picks
+    the tag because that is what the text is actually pinned to.
 
     An untagged capability is usable but unpinned, so it is worth a warning:
     the whole point of a tag here is that the text cannot change under you.
@@ -161,7 +166,7 @@ def _latest_tag(repo: Path) -> str:
         return tags[0].strip()
     head = _git("symbolic-ref", "--short", "refs/remotes/origin/HEAD", cwd=repo)
     log.warning(
-        "%s has no release tags; tracking %s unpinned (see HXS-SEC-02)",
+        "%s has no tags; tracking %s unpinned (see HXS-SEC-02)",
         repo.name, head,
     )
     return head
